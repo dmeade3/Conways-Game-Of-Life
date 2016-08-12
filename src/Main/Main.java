@@ -14,6 +14,7 @@ public class Main {
         // Running actual game
         while(true) {
 
+            // Ask how many moves to go before next stop
 
 
 

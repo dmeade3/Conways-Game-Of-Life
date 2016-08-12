@@ -24,11 +24,14 @@ public class BoundlessBoard {
         this.displayWidth = width;
     }
 
-    public void addCell() {
-
+    public void addCell(Cell cellToAdd) {
+        this.cellHolder.add(cellToAdd);
     }
 
     public void cleanDeadCells() {
+
+        // For loop through the cell holder and remove the ones
+        // with a status of dead
 
 
     }

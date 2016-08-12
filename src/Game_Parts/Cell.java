@@ -31,7 +31,6 @@ public class Cell {
 
     @Override
     public int hashCode() {
-
         return  (((x * y) / x) + y + 17);
     }
 }
