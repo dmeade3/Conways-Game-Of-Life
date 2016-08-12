@@ -1,8 +1,6 @@
 package Game_Parts;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -20,17 +18,22 @@ public class BoundlessBoard {
 
     private int[][] board;
 
-    private HashMap<Integer, Cell> cellHolder = new HashMap<>();
+    private Hashtable<Integer, Cell> cellHolder = new Hashtable<>();
+
+    private Hashtable<Integer, Cell> addCellHolder = new Hashtable<>();
 
 
-    public BoundlessBoard(int height, int width) {
+    public BoundlessBoard(int width, int height) {
 
         this.displayHeight = height;
         this.displayWidth = width;
     }
 
     public void addCell(Cell cellToAdd) {
-        this.cellHolder.put(cellToAdd.hashCode(), cellToAdd);
+
+        if (!this.cellHolder.containsKey(cellToAdd.hashCode())) {
+            this.cellHolder.put(cellToAdd.hashCode(), cellToAdd);
+        }
     }
 
     private void cleanDeadCells() {
@@ -59,7 +62,7 @@ public class BoundlessBoard {
         }
     }
 
-    private void rule123(Cell cell) {
+    private int rule123(Cell cell) {
 
         int neighborCount = 0;
 
@@ -130,18 +133,42 @@ public class BoundlessBoard {
         // Each cell with one or no neighbors dies, as if by solitude or
         // Each cell with four or more neighbors dies, as if by overpopulation.
         if ((neighborCount <= 1) || (neighborCount >= 4)) {
-            cellHolder.remove(cell.hashCode());
+
+            // kill the cell
+            cellHolder.getOrDefault(cell.hashCode(), cell).kill();
         }
 
         // Else Each cell with two or three neighbors survives.
 
-        System.out.println(neighborCount);
+        return neighborCount;
     }
 
     private void rule4() {
 
         // Each cell with three neighbors becomes populated.
 
+        int neighborCount;
+        Cell tempCell;
+
+        for (int x = 0; x < this.displayWidth; x++) {
+
+            for (int y = 0; y < this.displayHeight; y++) {
+
+                tempCell = new Cell(x, y);
+
+                // Check if tempCell is already a real cell
+                if (cellHolder.containsKey(tempCell.hashCode())) {
+                    continue;
+                }
+                else {
+                    neighborCount = rule123(tempCell);
+
+                    if (neighborCount == 3) {
+                        addCellHolder.put(tempCell.hashCode(), tempCell);
+                    }
+                }
+            }
+        }
     }
 
     public void runCycle() {
@@ -156,11 +183,20 @@ public class BoundlessBoard {
 
         rule4();
 
+        // Add in cells that were added in rules
+        for (Object o : addCellHolder.entrySet()) {
+            Map.Entry pair = (Map.Entry) o;
+
+            Cell cell = (Cell) pair.getValue();
+
+            cellHolder.put(cell.hashCode(), cell);
+        }
+
         cleanDeadCells();
     }
 
     private void loadBoard() {
-        board = new int[displayHeight][displayWidth];
+        board = new int[displayWidth][displayHeight];
 
         // Load board
         for (Object o : cellHolder.entrySet()) {
@@ -182,7 +218,7 @@ public class BoundlessBoard {
         System.out.println("\n\n\n");
 
         // Border
-        for (int i = 0; i < this.displayWidth * 3 + 2; i++) {
+        for (int i = 0; i < this.displayWidth + 2; i++) {
             System.out.print("-");
         }
 
@@ -194,17 +230,18 @@ public class BoundlessBoard {
             System.out.print("|");
             for (int x = 0; x < this.displayWidth; x++) {
 
+                if (this.board[x][y] == 1) {
+                    System.out.print("*");
+                }
 
-                if (this.board[x][y] == 1) { System.out.print(" * "); }
-
-                else { System.out.print("   "); }
+                else { System.out.print(" "); }
             }
 
             System.out.println("|");
         }
 
         // Bottom border
-        for (int i = 0; i < this.displayWidth * 3 + 2; i++) {
+        for (int i = 0; i < this.displayWidth + 2; i++) {
             System.out.print("-");
         }
 

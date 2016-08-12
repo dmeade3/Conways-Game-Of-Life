@@ -17,28 +17,27 @@ public class Cell {
         this.y = y;
     }
 
-    public boolean getDeadStatus() {
+    boolean getDeadStatus() {
         return this.dead;
     }
 
-    public int getX() {
+    int getX() {
         return this.x;
     }
 
-    public int getY() {
+    int getY() {
         return this.y;
     }
 
-    public void kill() {
+    void kill() {
         this.dead = true;
     }
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += this.x * 17;
-        hash += this.y * 31;
-
+        int hash = 17;
+        hash = ((hash + x) << 5) - (hash + x);
+        hash = ((hash + y) << 5) - (hash + y);
         return hash;
     }
 }
