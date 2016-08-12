@@ -5,20 +5,20 @@ import Game_Parts.BoundlessBoard;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-import static Structures.Structures.rowExploder;
+import static Structures.Structures.GosperGliderGun;
 
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
 
-        long waitTimeMilli = 500;
+        long waitTimeMilli = 30;
 
         int width = 150;
 
         int height = 30;
 
         // load the structure
-        BoundlessBoard board = rowExploder(width, height);
+        BoundlessBoard board = GosperGliderGun(width, height);
 
 // ######### Running Actual Game #######################################################################################
 
