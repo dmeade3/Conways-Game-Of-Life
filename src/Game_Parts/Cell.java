@@ -17,12 +17,16 @@ public class Cell {
         this.y = y;
     }
 
-    public boolean getLivingStatus() {
+    public boolean getDeadStatus() {
         return this.dead;
     }
 
     public int getX() {
         return this.x;
+    }
+
+    public int getY() {
+        return this.y;
     }
 
     public void kill() {
@@ -31,6 +35,10 @@ public class Cell {
 
     @Override
     public int hashCode() {
-        return  (((x * y) / x) + y + 17);
+        int hash = 0;
+        hash += this.x * 17;
+        hash += this.y * 31;
+
+        return hash;
     }
 }
